@@ -1,9 +1,11 @@
-﻿/*Solution to check if a binary tree is a Binary Search tree.
+package com.company;
+
+/*Solution to check if a binary tree is a Binary Search tree.
 This solution works for duplicate input values of nodes as well.
 
 Constraints:
 0<= NodeValue <= 10^4
-  
+
 Incorrect Approach:
 It is not enough to check if the left and right node of current node are smaller and larger than it respectively.
 This approach would't work for the following example which is actually not a Binary Search Tree --
@@ -11,7 +13,7 @@ This approach would't work for the following example which is actually not a Bin
     /   \
   12     28
  /  \
-9    24 
+9    24
 
 
 Correct Approach:
@@ -71,7 +73,7 @@ public class CheckBST {
     }
 
     static ArrayList < Integer > arr = new ArrayList < Integer > ();
-    //Function to produce a list by inorder traversal of tree 
+    //Function to produce a list by inorder traversal of tree
     public static void inorder(Node root) {
         if (root == null)
             return;
@@ -93,19 +95,32 @@ public class CheckBST {
         }
         return check;
     }
+    // The checkBST method Takes Space to Store in order traversal
+    // we can optimize the checkBST function by doing the check in inOrderTraversal itself and modifying the lower and upper bounds of values in each recursive call
+    // The below method has time Complexity of O(N) and Space Complexity of O(logN) where N are number of nodes
+    public static boolean checkBSTOptimized(Node root,int min,int max){
+        if(root==null)return true;
 
+        if(root.data <min || root.data>max)return false;
+
+        boolean left=checkBSTOptimized(root.left,min, root.data);
+        boolean right=checkBSTOptimized(root.right,root.data,max);
+
+        return left && right;
+    }
 
     public static void main(String[] args) {
         Node root = createBinaryTree();
         boolean check;
-        check = checkBST(root);
+//        check = checkBST(root);
+          check= checkBSTOptimized(root,Integer.MIN_VALUE,Integer.MAX_VALUE);
         if (check == true)
             System.out.println("It is a Binary Search Tree");
         else
             System.out.println("It is not a Binary Search Tree");
     }
 }
-/* Sample Input : 
+/* Sample Input :
 Enter root node value or -1 to exit: 15
 Enter left  child of 15 or -1 if there is no left child: 12
 Enter right child of 15 or -1 if there is no right child: 28
